@@ -2,7 +2,7 @@
 
 ## Config Format
 
-- I want entity used in `python data class` best practice
+- I want python dataclass
 - Name it `CliScriptsInfo`
 - Property `CliName`, 4 small letters
 - Property `Description`, max 300 characters
