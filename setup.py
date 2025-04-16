@@ -7,8 +7,7 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "info=core.info:cli:main",
-            "taog=core.task_log.cli:main",
+            "info=core.info.cli:main"
         ],
     },
     python_requires=">=3.7",

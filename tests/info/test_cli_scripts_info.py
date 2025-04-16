@@ -1,6 +1,6 @@
 import pytest
 import json
-from core.info import CliScriptsInfo
+from core.info.CliScriptsInfo import CliScriptsInfo
 
 def test_valid_cli_scripts_info():
     data = [{"CliName": "test", "Description": "Test description"}]
