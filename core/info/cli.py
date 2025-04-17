@@ -1,5 +1,5 @@
 from pathlib import Path
-from core.info.CliScriptsInfo import CliScriptsInfo
+from core.info.cli_scripts_info import CliScriptsInfo
 
 def main():
   json_file = Path(r"C:\atari-monk\code\utility-scripts-data\scripts.json")
