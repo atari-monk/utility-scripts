@@ -8,7 +8,8 @@ setup(
     entry_points={
         "console_scripts": [
             "info=core.info.cli:main",
-            "time=core.timestamp_cli:main"
+            "time=core.timestamp_cli:main",
+            "taog=core.task_log.cli:main"
         ],
     },
     python_requires=">=3.7",
