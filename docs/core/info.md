@@ -1,16 +1,27 @@
 # Info Script
 
-## Config Format
+## Configuration Format - Feature Specification
 
-- I want python dataclass
-- Name it `CliScriptsInfo`
-- Property `CliName`, 4 small letters
-- Property `Description`, max 300 characters
-- Loads from json, validates, prints to string as a list of objects
-- First write unit test
-- Write data class passing tests
-- Do not use comments in code
-- Json format:
+**Implementation Requirements:**
+
+- Functionality:
+  - Load from JSON array (see format below)
+  - Validate input
+  - Display as object list
+- Development Process:
+  1. Write unit tests first
+  2. Implement dataclass to pass tests
+- Code Style:
+  - No comments (self-documenting code only)
+- Python dataclass named `CliScriptsInfo` with:
+  - `CliName`: 4-character lowercase string
+  - `Description`: string (max 300 chars)
+  - **JSON Schema:**
   ```json
-  [{"CliName": "test", "Description": "test"}]
+  [
+    {
+      "CliName": "abcd",
+      "Description": "Max 300 characters"
+    }
+  ]
   ```

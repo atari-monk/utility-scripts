@@ -7,7 +7,8 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "info=core.info.cli:main"
+            "info=core.info.cli:main",
+            "time=core.timestamp_cli:main"
         ],
     },
     python_requires=">=3.7",
