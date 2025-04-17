@@ -23,3 +23,30 @@ Cli to track task time.
   - python
   - No comments (self-documenting code only)
 
+## Project Model - Feature Specification
+
+**Implementation Requirements:**
+
+- Functionality:
+  - Python dataclass named `ProjectInfo` with:
+    - `Name`: lowercase string, repo-name format
+    - `Description`: string (max 300 chars)
+    - Load from JSON file (see format below)
+    - Validate input
+    - Display as object list
+    - **JSON Schema:**
+    ```json
+    [
+      {
+        "Id": "Some Standard Format for id",
+        "Name": "Project Name",
+        "Description": "Max 300 characters"
+      }
+    ]
+    ```
+- Development Process:
+  1. Write unit tests first
+  2. Implement dataclass to pass tests
+- Code Style:
+  - No comments (self-documenting code only)
+
