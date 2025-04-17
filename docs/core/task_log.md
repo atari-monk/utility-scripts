@@ -1,5 +1,7 @@
 # Task Log Script
 
+Cli to track task time.
+
 ## Paths - Feature Specification
 
 **Implementation Requirements:**
@@ -20,3 +22,4 @@
 - Code Style:
   - python
   - No comments (self-documenting code only)
+

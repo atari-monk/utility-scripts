@@ -1,5 +1,7 @@
 # Timestamp Script
 
+cli to put timestamp into clipboard.
+
 ## Timestamp - Feature Specification
 
 **Implementation Requirements:**

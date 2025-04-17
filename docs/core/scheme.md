@@ -1,5 +1,7 @@
 # Scheme Script
 
+Cli to select template and copy it to clipboard.
+
 ## Configuration Format - Feature Specification
 
 **Implementation Requirements:**
@@ -27,3 +29,4 @@
   2. Implement classes to pass tests
 - Code Style:
   - No comments (self-documenting code only)
+

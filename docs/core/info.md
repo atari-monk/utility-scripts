@@ -1,5 +1,7 @@
 # Info Script
 
+Cli to print scripts available in utility-scripts module.
+
 ## Configuration Format - Feature Specification
 
 **Implementation Requirements:**
