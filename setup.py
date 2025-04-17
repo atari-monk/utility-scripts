@@ -9,7 +9,8 @@ setup(
         "console_scripts": [
             "info=core.info.cli:main",
             "time=core.timestamp_cli:main",
-            "taog=core.task_log.cli:main"
+            "taog=core.task_log.cli:main",
+            "shme=core.scheme.cli:main"
         ],
     },
     python_requires=">=3.7",
