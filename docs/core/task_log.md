@@ -2,20 +2,8 @@
 
 Cli to track task time.
 
-## Paths - Feature Specification
+## Feature Specification Assumptions
 
-**Implementation Requirements:**
-
-- ## Functionality:
-  - Class validating path to save db record
-  - Base path with db repo
-  - Folder name for db
-  - Folder of year yyyy
-  - Folder of moth mm
-  - path = repo/db/yyyy/mm/fileName
-  - path should update according to current time to generate files structure
-  - Check/generate folders, return path
-  - will be used to save records
 - Development Process:
   1. Write unit tests first
   2. Write function
@@ -23,16 +11,29 @@ Cli to track task time.
   - python
   - No comments (self-documenting code only)
 
+## Paths - Feature Specification
+
+**Implementation Requirements:**
+
+- ## Functionality:
+  - Class constructing paths to save db records
+  - base_path - data repo folder
+  - db_name - db folder
+  - Check/generate folders
+  - Property DbPath = base_path + db_name
+  - mechanism to produce rules for file names
+  - key and some logic to generate name
+
 ## Project Model - Feature Specification
 
 **Implementation Requirements:**
 
 - Functionality:
-  - Python dataclass named `ProjectInfo` with:
+  - Python dataclass named `Project` with:
     - `Id`: string
     - `Name`: lowercase string, repo-name format
     - `Description`: string (max 300 chars)
-    - method loading List[ProjectInfo] from json file
+    - method loading List[Project] from json file
     - Validate input
     - Display as object list
     - **JSON:**
@@ -45,23 +46,18 @@ Cli to track task time.
       }
     ]
     ```
-- Development Process:
-  1. Write unit tests first
-  2. Implement dataclass to pass tests
-- Code Style:
-  - No comments (self-documenting code only)
 
 ## Task Model - Feature Specification
 
 **Implementation Requirements:**
 
 - Functionality:
-  - Python dataclass named `TaskInfo` with:
+  - Python dataclass named `Task` with:
     - `Id`: string
     - `ProjectId`: string
     - `Name`: lowercase string, repo-name format
     - `Description`: string (max 300 chars)
-    - method loading List[TaskInfo] from json file
+    - method loading List[Task] from json file
     - Validate input
     - Display as object list
     - **JSON:**
@@ -75,8 +71,32 @@ Cli to track task time.
       }
     ]
     ```
-- Development Process:
-  1. Write unit tests first
-  2. Implement dataclass to pass tests
-- Code Style:
-  - No comments (self-documenting code only)
+
+## Record Model - Feature Specification
+
+**Implementation Requirements:**
+
+- Functionality:
+
+  - Python dataclass named `Record` with:
+
+    - Validate input
+    - Display as object list
+    - method loading List[Record] from json file
+    - method loading last record from json file
+    - **JSON:**
+
+    ```json
+    [
+      {
+        "Date": "2025-04-17",
+        "TaskId": "1",
+        "Description": "Max 300 characters",
+        "Estimate Minutes": 0,
+        "Start Time": "19:03",
+        "End Time": "20:55",
+        "Actual Minutes": 0,
+        "Note": "Max 300 characters"
+      }
+    ]
+    ```
