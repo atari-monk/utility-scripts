@@ -1,85 +1,101 @@
 import pytest
 import json
-from core.scheme import SchemeInfo
-from core.scheme.SchemeLoader import SchemeLoader
+import os
+from tempfile import NamedTemporaryFile
+import pyperclip
+from core.scheme.scheme_info import SchemeInfo
 
 def test_valid_scheme_info():
-    valid = SchemeInfo(
-        Name="validname",
-        Description="A valid description",
-        Path="C:\\valid\\path.json"
+    valid_scheme = SchemeInfo(
+        Name="validscheme",
+        Description="A valid scheme description",
+        Path=os.path.abspath(__file__)
     )
-    assert valid.Name == "validname"
-    assert valid.Description == "A valid description"
-    assert valid.Path == "C:\\valid\\path.json"
+    assert valid_scheme.Name == "validscheme"
+    assert valid_scheme.Description == "A valid scheme description"
 
 def test_invalid_name():
     with pytest.raises(ValueError):
-        SchemeInfo(Name="InvalidName", Description="desc", Path="path")
+        SchemeInfo(
+            Name="InvalidSchemeWithUpperCase",
+            Description="Test",
+            Path=os.path.abspath(__file__)
+        )
+
+def test_long_name():
+    with pytest.raises(ValueError):
+        SchemeInfo(
+            Name="a" * 51,
+            Description="Test",
+            Path=os.path.abspath(__file__)
+        )
 
 def test_long_description():
     with pytest.raises(ValueError):
         SchemeInfo(
-            Name="name",
-            Description="x" * 301,
-            Path="path"
+            Name="validscheme",
+            Description="a" * 301,
+            Path=os.path.abspath(__file__)
         )
 
-def test_from_valid_json():
-    json_str = """
-    [{
-        "Name": "test",
-        "Description": "Test description",
-        "Path": "C:\\test.json"
-    }]
-    """
-    schemes = SchemeLoader.from_json(json_str)
-    assert len(schemes) == 1
-    assert schemes[0].Name == "test"
-
-def test_from_invalid_json():
+def test_invalid_path():
     with pytest.raises(ValueError):
-        SchemeLoader.from_json("invalid json")
+        SchemeInfo(
+            Name="validscheme",
+            Description="Test",
+            Path="/nonexistent/path"
+        )
 
-def test_missing_required_field():
-    json_str = """
-    [{
-        "Name": "test",
-        "Description": "Test description"
-    }]
-    """
+def test_from_json_file():
+    json_data = [
+        {
+            "Name": "testscheme",
+            "Description": "Test description",
+            "Path": os.path.abspath(__file__)
+        }
+    ]
+    
+    with NamedTemporaryFile(mode='w', delete=False) as f:
+        json.dump(json_data, f)
+        temp_path = f.name
+    
+    try:
+        schemes = SchemeInfo.from_json_file(temp_path)
+        assert len(schemes) == 1
+        assert schemes[0].Name == "testscheme"
+    finally:
+        os.unlink(temp_path)
+
+def test_load_and_copy_scheme(monkeypatch):
+    test_content = "Test file content"
+    with NamedTemporaryFile(mode='w', delete=False) as f:
+        f.write(test_content)
+        temp_path = f.name
+    
+    try:
+        scheme = SchemeInfo(
+            Name="copytest",
+            Description="Copy test",
+            Path=temp_path
+        )
+        
+        copied_content = None
+        def mock_copy(content):
+            nonlocal copied_content
+            copied_content = content
+        
+        monkeypatch.setattr(pyperclip, 'copy', mock_copy)
+        
+        SchemeInfo.load_and_copy_scheme([scheme], "copytest")
+        assert copied_content == test_content
+    finally:
+        os.unlink(temp_path)
+
+def test_load_nonexistent_scheme():
+    scheme = SchemeInfo(
+        Name="exists",
+        Description="Test",
+        Path=os.path.abspath(__file__)
+    )
     with pytest.raises(ValueError):
-        SchemeLoader.from_json(json_str)
-
-def test_from_file(tmp_path):
-    test_file = tmp_path / "test.json"
-    test_data = [{
-        "Name": "filetest",
-        "Description": "File test",
-        "Path": "C:\\filetest.json"
-    }]
-    test_file.write_text(json.dumps(test_data))
-    
-    schemes = SchemeLoader.from_file(test_file)
-    assert len(schemes) == 1
-    assert schemes[0].Name == "filetest"
-
-def test_load_to_clipboard(tmp_path, monkeypatch):
-    test_file = tmp_path / "clipboard.json"
-    test_data = [{
-        "Name": "clip",
-        "Description": "Clipboard test",
-        "Path": "C:\\clip.json"
-    }]
-    test_file.write_text(json.dumps(test_data))
-    
-    clipboard_content = None
-    
-    def mock_copy(content):
-        nonlocal clipboard_content
-        clipboard_content = content
-    
-    monkeypatch.setattr("pyperclip.copy", mock_copy)
-    
-    SchemeLoader.load_to_clipboard(test_file)
-    assert clipboard_content == json.dumps(test_data)
+        SchemeInfo.load_and_copy_scheme([scheme], "nonexistent")
