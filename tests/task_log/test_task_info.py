@@ -52,14 +52,14 @@ def test_load_from_json(tmp_path):
     with open(file_path, 'w') as f:
         json.dump(test_data, f)
     
-    loaded_tasks = TaskInfo.from_json(file_path)
+    loaded_tasks = TaskInfo.load_from_json(file_path)
     assert len(loaded_tasks) == 2
     assert loaded_tasks[0].Name == "task-one"
     assert loaded_tasks[1].Description == "Second task"
 
 def test_invalid_json_file():
     with pytest.raises(FileNotFoundError):
-        TaskInfo.from_json("nonexistent.json")
+        TaskInfo.load_from_json("nonexistent.json")
 
 def test_display_as_list(capsys):
     tasks = [

@@ -16,7 +16,7 @@ class TaskInfo:
             raise ValueError("Description must be 300 characters or less")
 
     @classmethod
-    def from_json(cls, file_path: str) -> List['TaskInfo']:
+    def load_from_json(cls, file_path: str) -> List['TaskInfo']:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
         

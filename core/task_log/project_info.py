@@ -16,7 +16,7 @@ class ProjectInfo:
             raise ValueError("Description cannot exceed 300 characters")
 
     @classmethod
-    def from_json(cls, file_path: str) -> List['ProjectInfo']:
+    def load_from_json(cls, file_path: str) -> List['ProjectInfo']:
         with open(file_path) as f:
             data = json.load(f)
         

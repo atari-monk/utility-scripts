@@ -77,15 +77,12 @@ Cli to track task time.
 **Implementation Requirements:**
 
 - Functionality:
-
   - Python dataclass named `Record` with:
-
-    - Validate input
-    - Display as object list
+    - methods validating input
+    - method displaying as object list
     - method loading List[Record] from json file
     - method loading last record from json file
     - **JSON:**
-
     ```json
     [
       {

@@ -34,7 +34,7 @@ def test_from_json_valid_file(tmp_path):
     with open(file_path, 'w') as f:
         json.dump(test_data, f)
     
-    projects = ProjectInfo.from_json(file_path)
+    projects = ProjectInfo.load_from_json(file_path)
     assert len(projects) == 1
     assert projects[0].name == "projectone"
 
@@ -45,7 +45,7 @@ def test_from_json_invalid_schema(tmp_path):
         json.dump(test_data, f)
     
     with pytest.raises(ValidationError):
-        ProjectInfo.from_json(file_path)
+        ProjectInfo.load_from_json(file_path)
 
 def test_display_as_list(capsys):
     projects = [
