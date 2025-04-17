@@ -12,9 +12,9 @@ Cli to select template and copy it to clipboard.
   - `Description`: string (max 300 chars)
   - `Path`: string
   - validation methods
-  - methods loading List[SchemeInfo] from json file
+  - method loading List[SchemeInfo] from json file
   - Method that takes name, selects scheme from list, loads file from `Path` and puts it in clipboard, lets handle text files
-  - **JSON Schema:**
+  - **JSON:**
   ```json
   [
     {

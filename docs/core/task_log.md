@@ -29,12 +29,13 @@ Cli to track task time.
 
 - Functionality:
   - Python dataclass named `ProjectInfo` with:
+    - `Id`: string
     - `Name`: lowercase string, repo-name format
     - `Description`: string (max 300 chars)
-    - Load from JSON file (see format below)
+    - method loading List[ProjectInfo] from json file
     - Validate input
     - Display as object list
-    - **JSON Schema:**
+    - **JSON:**
     ```json
     [
       {
@@ -50,3 +51,32 @@ Cli to track task time.
 - Code Style:
   - No comments (self-documenting code only)
 
+## Task Model - Feature Specification
+
+**Implementation Requirements:**
+
+- Functionality:
+  - Python dataclass named `TaskInfo` with:
+    - `Id`: string
+    - `ProjectId`: string
+    - `Name`: lowercase string, repo-name format
+    - `Description`: string (max 300 chars)
+    - method loading List[TaskInfo] from json file
+    - Validate input
+    - Display as object list
+    - **JSON:**
+    ```json
+    [
+      {
+        "Id": "Some Standard Format for id",
+        "ProjectId": "Some Standard Format for id",
+        "Name": "Task Name",
+        "Description": "Max 300 characters"
+      }
+    ]
+    ```
+- Development Process:
+  1. Write unit tests first
+  2. Implement dataclass to pass tests
+- Code Style:
+  - No comments (self-documenting code only)

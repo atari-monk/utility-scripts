@@ -10,10 +10,10 @@ Cli to print scripts available in utility-scripts module.
   - Python dataclass named `CliScriptsInfo` with:
     - `CliName`: 4-character lowercase string
     - `Description`: string (max 300 chars)
-    - Load from JSON array (see format below)
+    - method loading List[CliScriptsInfo] from json file
     - Validate input
     - Display as object list
-    - **JSON Schema:**
+    - **JSON:**
     ```json
     [
       {
