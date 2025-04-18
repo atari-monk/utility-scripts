@@ -1,11 +1,9 @@
-/* Reset some default styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Set the body style */
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f6f8fa;
@@ -16,7 +14,6 @@ body {
   line-height: 1.6;
 }
 
-/* Header Styling */
 header {
   border-bottom: 1px solid #e1e4e8;
   padding-bottom: 10px;
@@ -28,7 +25,6 @@ header h1 {
   color: #24292f;
 }
 
-/* Main content layout */
 main {
   padding: 20px;
   background-color: #ffffff;
@@ -36,7 +32,6 @@ main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Code block styling */
 pre {
   background-color: #f6f8fa;
   border-radius: 6px;
@@ -51,9 +46,8 @@ code {
   color: #24292f;
 }
 
-/* Links */
 a {
-  color: #0366d6; /* GitHub blue */
+  color: #0366d6;
   text-decoration: none;
 }
 
@@ -61,9 +55,8 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Button Styling */
 button {
-  background-color: #28a745; /* GitHub green */
+  background-color: #28a745;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -75,7 +68,6 @@ button:hover {
   background-color: #218838;
 }
 
-/* Footer Styling */
 footer {
   margin-top: 40px;
   font-size: 0.9rem;
@@ -83,7 +75,6 @@ footer {
   color: #6a737d;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   body {
     padding: 15px;
@@ -97,4 +88,3 @@ footer {
     padding: 10px;
   }
 }
-
