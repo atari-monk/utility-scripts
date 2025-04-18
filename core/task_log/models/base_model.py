@@ -9,7 +9,7 @@ T = TypeVar('T', bound='BaseModel')
 @dataclass
 class BaseModel:
     @classmethod
-    def loadFromJson(cls: Type[T], filePath: Path) -> List[T]:
+    def load_from_json(cls: Type[T], filePath: Path) -> List[T]:
         if not filePath.exists():
             raise FileNotFoundError(f"File not found: {filePath}")
         
