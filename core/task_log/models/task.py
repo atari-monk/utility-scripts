@@ -4,8 +4,9 @@ from pathlib import Path
 import json
 
 @dataclass
-class Project:
-    Id: int
+class Task:
+    Id: str
+    ProjectId: str
     Name: str
     Description: str
 
@@ -13,23 +14,23 @@ class Project:
         if not isinstance(self.Id, int) or self.Id <= 0:
             raise ValueError("Id must be a positive integer")
         
+        if not isinstance(self.ProjectId, int) or self.ProjectId <= 0:
+            raise ValueError("ProjectId must be a positive integer")
+        
         if not isinstance(self.Name, str):
             raise ValueError("Name must be a string")
-            
-        if not self.Name.islower() or ' ' in self.Name:
-            raise ValueError("Name must be lowercase and in repo-name format (no spaces)")
-            
+
         if len(self.Name) > 50:
             raise ValueError("Name cannot exceed 50 characters")
-            
+        
         if not isinstance(self.Description, str):
             raise ValueError("Description must be a string")
             
         if len(self.Description) > 300:
             raise ValueError("Description cannot exceed 300 characters")
-
+        
     @classmethod
-    def loadFromJson(cls, filePath: Path) -> List['Project']:
+    def loadFromJson(cls, filePath: Path) -> List['Task']:
         if not filePath.exists():
             raise FileNotFoundError(f"File not found: {filePath}")
         
@@ -45,18 +46,24 @@ class Project:
         return [cls(**item) for item in data]
 
     @staticmethod
-    def getListString(items: List['Project']) -> str:
+    def getListString(items: List['Task']) -> str:
         if not items:
-            return "No projects to list"
-            
-        max_id_len = max(len(str(p.Id)) for p in items)
-        max_name_len = max(len(p.Name) for p in items)
+            return "No tasks to list"
         
-        header = (f"{'ID':<{max_id_len}}  {'Name':<{max_name_len}}  Description")
+        max_id_len = max(len(str(task.Id)) for task in items)
+        max_project_id_len = max(len(str(task.ProjectId)) for task in items)
+        max_name_len = max(len(task.Name) for task in items)
+        
+        header = (f"{'ID':<{max_id_len}}  {'Project ID':<{max_project_id_len}}  {'Name':<{max_name_len}}  Description")
         separator = '-' * len(header)
         
         lines = [header, separator]
-        for item in items:
-            lines.append(f"{item.Id:<{max_id_len}}  {item.Name:<{max_name_len}}  {item.Description}")
+        for task in items:
+            lines.append(
+                f"{task.Id:<{max_id_len}}  "
+                f"{task.ProjectId:<{max_project_id_len}}  "
+                f"{task.Name:<{max_name_len}}  "
+                f"{task.Description}"
+            )
         
         return '\n'.join(lines)

@@ -1,8 +1,8 @@
 from core.task_log.db_path import DbPath
 from core.task_log.db_table import DbTablePath
 from core.task_log.models.project import Project
-from core.task_log.record import Record
-from core.task_log.task_info import TaskInfo
+from core.task_log.models.record import Record
+from core.task_log.models.task import Task
 
 def main():
   db_info = DbPath(repoPath = r"C:\atari-monk\code\utility-scripts-data", dbFolder = "task_log")
@@ -13,8 +13,8 @@ def main():
   projects = Project.loadFromJson(project_table.get_path())  
   Project.getListString(projects)
 
-  tasks = TaskInfo.load_from_json(task_table.get_path())
-  TaskInfo.display_as_list(tasks)
+  tasks = Task.load_from_json(task_table.get_path())
+  Task.display_as_list(tasks)
 
   records = Record.load_from_json(record_table.get_path())
   Record.display_as_list(records)

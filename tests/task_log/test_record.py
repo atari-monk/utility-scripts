@@ -1,5 +1,5 @@
 import pytest
-from core.task_log.record import Record
+from core.task_log.models.record import Record
 
 def test_record_initialization():
     record = Record(

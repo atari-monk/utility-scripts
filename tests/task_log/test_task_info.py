@@ -1,9 +1,9 @@
 import pytest
 import json
-from core.task_log.task_info import TaskInfo
+from core.task_log.models.task import Task
 
 def test_taskinfo_creation():
-    task = TaskInfo(
+    task = Task(
         Id="task-123",
         ProjectId="proj-456",
         Name="sample-task",
@@ -15,7 +15,7 @@ def test_taskinfo_creation():
     assert task.Description == "A sample task description"
 
 def test_name_lowercase_conversion():
-    task = TaskInfo(
+    task = Task(
         Id="task-123",
         ProjectId="proj-456",
         Name="Sample-Task",
@@ -25,7 +25,7 @@ def test_name_lowercase_conversion():
 
 def test_description_length_validation():
     with pytest.raises(ValueError):
-        TaskInfo(
+        Task(
             Id="task-123",
             ProjectId="proj-456",
             Name="sample-task",
@@ -52,24 +52,24 @@ def test_load_from_json(tmp_path):
     with open(file_path, 'w') as f:
         json.dump(test_data, f)
     
-    loaded_tasks = TaskInfo.load_from_json(file_path)
+    loaded_tasks = Task.load_from_json(file_path)
     assert len(loaded_tasks) == 2
     assert loaded_tasks[0].Name == "task-one"
     assert loaded_tasks[1].Description == "Second task"
 
 def test_invalid_json_file():
     with pytest.raises(FileNotFoundError):
-        TaskInfo.load_from_json("nonexistent.json")
+        Task.load_from_json("nonexistent.json")
 
 def test_display_as_list(capsys):
     tasks = [
-        TaskInfo(
+        Task(
             Id="task-1",
             ProjectId="proj-1",
             Name="task-one",
             Description="First task"
         ),
-        TaskInfo(
+        Task(
             Id="task-2",
             ProjectId="proj-1",
             Name="task-two",
@@ -77,7 +77,7 @@ def test_display_as_list(capsys):
         )
     ]
     
-    TaskInfo.display_as_list(tasks)
+    Task.display_as_list(tasks)
     captured = capsys.readouterr()
     assert "task-one" in captured.out
     assert "Second task" in captured.out
