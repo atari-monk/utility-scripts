@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 from pathlib import Path
 from dataclasses import dataclass
@@ -11,7 +12,7 @@ class Record(BaseModel):
     estimate_minutes: int
     start_time: str
     end_time: str
-    actual_minutes: int
+    actual_minutes: int = 0
     note: str
 
     def __post_init__(self):
@@ -23,7 +24,13 @@ class Record(BaseModel):
         self._validate_time_string(self.end_time, "end_time")
         if self.start_time and self.end_time:
             self._validate_time_range(self.start_time, self.end_time)
+            self._calculate_actual_minutes()
 
+    def _calculate_actual_minutes(self):
+        start_h, start_m = map(int, self.start_time.split(':'))
+        end_h, end_m = map(int, self.end_time.split(':'))
+        self.actual_minutes = (end_h * 60 + end_m) - (start_h * 60 + start_m)
+        
     @classmethod
     def load_last_record(cls, file_path: Path) -> 'Record':
         records = cls.load_from_json(file_path)
