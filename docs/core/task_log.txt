@@ -1,8 +1,8 @@
-# Task Log Script.
+Task Log Script.
 
 Cli to track task time.
 
-## Assumptions:
+Assumptions:
 
 - Development Process:
   1. Write unit tests first.
@@ -11,7 +11,7 @@ Cli to track task time.
   - python.
   - No comments, self-documenting code only.
 
-## Paths:
+Paths:
 
 - class DbPath.
 - constructing db path.
@@ -31,45 +31,9 @@ Cli to track task time.
   - file extension param, defaults to json.
   - uses parameters to return table path.
 
-## Models:
+Models:
 
 - dataclass Project, Task, Record.
-
-```json
-[
-  {
-    "Id": "Some Standard Format for id",
-    "Name": "Project Name",
-    "Description": "Max 300 characters"
-  }
-]
-```
-
-```json
-[
-  {
-    "Id": "Some Standard Format for id",
-    "ProjectId": "Some Standard Format for id",
-    "Name": "Task Name",
-    "Description": "Max 300 characters"
-  }
-]
-```
-
-```json
-[
-  {
-    "Date": "2025-04-17",
-    "TaskId": "1",
-    "Description": "Max 300 characters",
-    "Estimate Minutes": 0,
-    "Start Time": "19:03",
-    "End Time": "20:55",
-    "Actual Minutes": 0,
-    "Note": "Max 300 characters"
-  }
-]
-```
 
 - shared methods:
 - validation methods.
