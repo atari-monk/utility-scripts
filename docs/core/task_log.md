@@ -16,20 +16,21 @@ Cli to track task time.
 - class DbPath.
 
   - constructing db path.
+  - repoPath.
+  - dbFolder.
   - properties:
-  - DataRepoPath.
-  - DbFolder.
-  - DbPath = DataRepoPath + DbFolder.
-  - check/generate folders.
+  - path = RepoPath + DbFolder.
+  - methods:
+    - check/generate folders in ctor.
 
-- class DbTable.
+- class DbTablePath.
   - constructing db table path.
   - parameters:
-  - DbPath class.
-  - lambda to generate name.
+  - dbPath of type DbPath.
+  - namingLogic - lambda to generate name.
   - methods:
-  - getTablePath.
-    - file extension param, defaults to json.
+  - getPath.
+    - ext - file extension param, defaults to 'json'.
     - uses parameters to return table path.
 
 ## Models:
