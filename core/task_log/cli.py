@@ -10,25 +10,22 @@ def main():
   db_path = DbPath(repo_path = Path(r"C:\atari-monk\code\utility-scripts-data"), db_folder = "task_log")
   
   project_db_table = DbTablePath(db_path, name_func = lambda: "projects")
-
   projects = Project.load_from_json(project_db_table.get_path())  
 
-  print()
-  print(Project.get_list_string(projects))
-  print()
+  print("\nProject:\n\n" + Project.get_list_string(projects) + "\n")
 
   for project in projects:
     task_db_table = DbTablePath(db_path, lambda: f"{project.name}_tasks")
     try:
       tasks = Task.load_from_json(task_db_table.get_path())
-      print(Task.get_list_string(tasks))
-      print()
+
+      print("Task:\n\n" + Task.get_list_string(tasks) + "\n")
 
       today = datetime.today()
       record_db_table = DbTablePath(db_path, lambda: f"{project.name}_records_{today.year}_{today.month:02d}")
       records = Record.load_from_json(record_db_table.get_path())
-      print(Record.get_list_string(records))
-      print()
+
+      print("Record:\n\n" + Record.get_list_string(records) + "\n")
 
     except FileNotFoundError:
       continue
