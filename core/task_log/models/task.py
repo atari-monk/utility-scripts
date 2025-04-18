@@ -17,8 +17,8 @@ class Task(BaseModel):
     @staticmethod
     def getListString(items: List['Task']) -> str:
         columns = [
-            ("ID", "Id", str),
-            ("Project ID", "ProjectId", str),
+            ("Id", "Id", int),
+            ("Project Id", "ProjectId", int),
             ("Name", "Name"),
             ("Description", "Description")
         ]

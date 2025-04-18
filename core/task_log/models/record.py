@@ -6,7 +6,7 @@ from core.task_log.models.base_model import BaseModel
 @dataclass
 class Record(BaseModel):
     Date: str
-    TaskId: str
+    TaskId: int
     Description: str
     EstimateMinutes: int
     StartTime: str
@@ -31,8 +31,12 @@ class Record(BaseModel):
     def getListString(items: List['Record']) -> str:
         columns = [
             ("Date", "Date"),
-            ("Task ID", "TaskId"),
+            ("Task Id", "TaskId", int),
             ("Description", "Description"),
-            ("Estimate", "EstimateMinutes", str)
+            ("Estimate", "EstimateMinutes", str),
+            ("StartTime", "StartTime", str),
+            ("EndTime", "EndTime", str),
+            ("ActualMinutes", "ActualMinutes", str),
+            ("Note", "Note", str)
         ]
         return Record.generate_list_string(items, columns)

@@ -1,22 +1,20 @@
 from typing import TypeVar, Type, List, Any
 from datetime import datetime
 from pathlib import Path
-from dataclasses import fields
+from dataclasses import dataclass, fields
 import json
 
 T = TypeVar('T', bound='BaseModel')
 
+@dataclass
 class BaseModel:
     @classmethod
     def loadFromJson(cls: Type[T], filePath: Path) -> List[T]:
         if not filePath.exists():
             raise FileNotFoundError(f"File not found: {filePath}")
         
-        try:
-            with open(filePath, 'r', encoding='utf-8') as f:
+        with open(filePath, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-        except json.JSONDecodeError as e:
-            raise json.JSONDecodeError(f"Invalid JSON in file {filePath}: {e.msg}", e.doc, e.pos)
         
         if not isinstance(data, list):
             raise ValueError("JSON data should be a list of items")
@@ -74,12 +72,13 @@ class BaseModel:
             return f"No {cls.__name__.lower()}s to list"
         
         max_lengths = []
-        for header, field_name, *_ in columns:
+        for col in columns:
+            header, field_name, *rest = col
             max_len = len(header)
+            format_func = rest[0] if rest else None
             for item in items:
                 value = getattr(item, field_name)
-                if len(columns[0]) > 2:
-                    format_func = columns[0][2]
+                if format_func:
                     value = format_func(value)
                 value_len = len(str(value))
                 if value_len > max_len:
@@ -96,11 +95,10 @@ class BaseModel:
         
         for item in items:
             line_parts = []
-            for i, (_, field_name, *_) in enumerate(columns):
+            for i, (_, field_name, *rest) in enumerate(columns):
                 value = getattr(item, field_name)
-                if len(columns[i]) > 2:
-                    format_func = columns[i][2]
-                    value = format_func(value)
+                if rest:
+                    value = rest[0](value)
                 line_parts.append(f"{str(value):<{max_lengths[i]}}")
             lines.append("  ".join(line_parts))
         
