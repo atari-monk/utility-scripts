@@ -4,22 +4,22 @@ from core.task_log.models.base_model import BaseModel
 
 @dataclass
 class Task(BaseModel):
-    Id: int
-    ProjectId: int
-    Name: str
-    Description: str
+    id: int
+    project_id: int
+    name: str
+    description: str
 
     def __post_init__(self):
         super().__post_init__()
-        self._validate_string(self.Name, "Name", max_length=50)
-        self._validate_string(self.Description, "Description", max_length=300)
+        self._validate_string(self.name, "name", max_length=50)
+        self._validate_string(self.description, "description", max_length=300)
 
     @staticmethod
-    def getListString(items: List['Task']) -> str:
+    def get_list_string(items: List['Task']) -> str:
         columns = [
-            ("Id", "Id", int),
-            ("Project Id", "ProjectId", int),
-            ("Name", "Name"),
-            ("Description", "Description")
+            ("Id", "id", int),
+            ("Project Id", "project_id", int),
+            ("Name", "name"),
+            ("Description", "description")
         ]
         return Task.generate_list_string(items, columns)
