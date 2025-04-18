@@ -32,6 +32,16 @@ main {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+ul,
+ol {
+	padding-left: 20px;
+}
+
+ul ul,
+ol ol {
+	padding-left: 40px;
+}
+
 pre {
   background-color: #f6f8fa;
   border-radius: 6px;
