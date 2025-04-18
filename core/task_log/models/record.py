@@ -1,8 +1,7 @@
 from typing import List
-from dataclasses import dataclass
 from pathlib import Path
+from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
-from .validators import validate_string, validate_json_file, validate_date_string, generate_list_string
 
 @dataclass
 class Record(BaseModel):
@@ -16,9 +15,10 @@ class Record(BaseModel):
     Note: str
 
     def __post_init__(self):
-        validate_date_string(self.Date, "Date")
-        validate_string(self.Description, "Description", max_length=300)
-        validate_string(self.Note, "Note", max_length=300)
+        super().__post_init__()
+        self._validate_date_string(self.Date, "Date")
+        self._validate_string(self.Description, "Description", max_length=300)
+        self._validate_string(self.Note, "Note", max_length=300)
 
     @classmethod
     def loadLastRecord(cls, file_path: Path) -> 'Record':
@@ -35,4 +35,4 @@ class Record(BaseModel):
             ("Description", "Description"),
             ("Estimate", "EstimateMinutes", str)
         ]
-        return generate_list_string(items, columns)
+        return Record.generate_list_string(items, columns)
