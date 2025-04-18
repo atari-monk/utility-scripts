@@ -12,10 +12,22 @@ def main():
 
   projects = Project.load_from_json(project_db_table.get_path())  
 
+  print()
+
   print(Project.get_list_string(projects))
 
+  print()
 
-  # task_db_table = DbTablePath(db_path, lambda: "tasks_1")
+  for project in projects:
+    task_db_table = DbTablePath(db_path, lambda: f"{project.name}_tasks")
+    try:
+      tasks = Task.load_from_json(task_db_table.get_path())
+      print(Task.get_list_string(tasks))
+      print()
+    except FileNotFoundError:
+      continue
+    
+  #task_db_table = DbTablePath(db_path, lambda: "tasks_1")
 
   # record_table = DbTablePath(db_path, lambda: "records_2025_04")
   
