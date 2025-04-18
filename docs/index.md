@@ -2,6 +2,10 @@
 layout: default
 ---
 
+# utility-scripts
+
+Documentation for my scripts
+
 ## Core
 
 - [Info](core/info.md)
