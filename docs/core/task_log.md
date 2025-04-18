@@ -14,67 +14,69 @@ Cli to track task time.
 ## Paths:
 
 - class DbPath.
-- constructing db path.
-- properties:
-- DataRepoPath.
-- DbFolder.
-- DbPath = DataRepoPath + DbFolder.
-- check/generate folders.
+
+  - constructing db path.
+  - properties:
+  - DataRepoPath.
+  - DbFolder.
+  - DbPath = DataRepoPath + DbFolder.
+  - check/generate folders.
 
 - class DbTable.
-- constructing db table path.
-- parameters:
-- DbPath class.
-- lambda to generate name.
-- methods:
-- getTablePath.
-  - file extension param, defaults to json.
-  - uses parameters to return table path.
+  - constructing db table path.
+  - parameters:
+  - DbPath class.
+  - lambda to generate name.
+  - methods:
+  - getTablePath.
+    - file extension param, defaults to json.
+    - uses parameters to return table path.
 
 ## Models:
 
 - dataclass Project, Task, Record.
 
-```json
-[
-  {
-    "Id": "Some Standard Format for id",
-    "Name": "Project Name",
-    "Description": "Max 300 characters"
-  }
-]
-```
+  ```json
+  [
+    {
+      "Id": "Some Standard Format for id",
+      "Name": "Project Name",
+      "Description": "Max 300 characters"
+    }
+  ]
+  ```
 
-```json
-[
-  {
-    "Id": "Some Standard Format for id",
-    "ProjectId": "Some Standard Format for id",
-    "Name": "Task Name",
-    "Description": "Max 300 characters"
-  }
-]
-```
+  ```json
+  [
+    {
+      "Id": "Some Standard Format for id",
+      "ProjectId": "Some Standard Format for id",
+      "Name": "Task Name",
+      "Description": "Max 300 characters"
+    }
+  ]
+  ```
 
-```json
-[
-  {
-    "Date": "2025-04-17",
-    "TaskId": "1",
-    "Description": "Max 300 characters",
-    "Estimate Minutes": 0,
-    "Start Time": "19:03",
-    "End Time": "20:55",
-    "Actual Minutes": 0,
-    "Note": "Max 300 characters"
-  }
-]
-```
+  ```json
+  [
+    {
+      "Date": "2025-04-17",
+      "TaskId": "1",
+      "Description": "Max 300 characters",
+      "Estimate Minutes": 0,
+      "Start Time": "19:03",
+      "End Time": "20:55",
+      "Actual Minutes": 0,
+      "Note": "Max 300 characters"
+    }
+  ]
+  ```
 
 - shared methods:
-- validation methods.
-- loading List[ModelType] from json file.
-- get string with objects list.
+
+  - validation methods.
+  - loading List[ModelType] from json file.
+  - get string with objects list.
 
 - Record methods:
-- method loading last record from json file.
+  - method loading last record from json file.
