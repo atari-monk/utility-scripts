@@ -19,6 +19,10 @@ class Record(BaseModel):
         self._validate_date_string(self.Date, "Date")
         self._validate_string(self.Description, "Description", max_length=300)
         self._validate_string(self.Note, "Note", max_length=300)
+        self._validate_time_string(self.StartTime, "StartTime")
+        self._validate_time_string(self.EndTime, "EndTime")
+        if self.StartTime and self.EndTime:
+            self._validate_time_range(self.StartTime, self.EndTime)
 
     @classmethod
     def loadLastRecord(cls, file_path: Path) -> 'Record':

@@ -62,6 +62,23 @@ class BaseModel:
         except ValueError:
             raise ValueError(f"Invalid {field_name} format, expected {date_format}")
 
+    @staticmethod
+    def _validate_time_string(value: str, field_name: str, time_format: str = "%H:%M") -> None:
+        try:
+            datetime.strptime(value, time_format)
+        except ValueError:
+            raise ValueError(f"Invalid {field_name} format, expected {time_format}")
+
+    @staticmethod
+    def _validate_time_range(start_time: str, end_time: str, 
+                           start_field_name: str = "StartTime", 
+                           end_field_name: str = "EndTime",
+                           time_format: str = "%H:%M") -> None:
+        start = datetime.strptime(start_time, time_format)
+        end = datetime.strptime(end_time, time_format)
+        if end <= start:
+            raise ValueError(f"{end_field_name} must be after {start_field_name}")
+        
     @classmethod
     def generate_list_string(cls, items: List[T], columns: list) -> str:
         """
