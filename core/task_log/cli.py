@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from core.task_log.db_path import DbPath
 from core.task_log.db_table_path import DbTablePath
@@ -13,9 +14,7 @@ def main():
   projects = Project.load_from_json(project_db_table.get_path())  
 
   print()
-
   print(Project.get_list_string(projects))
-
   print()
 
   for project in projects:
@@ -24,19 +23,15 @@ def main():
       tasks = Task.load_from_json(task_db_table.get_path())
       print(Task.get_list_string(tasks))
       print()
+
+      today = datetime.today()
+      record_db_table = DbTablePath(db_path, lambda: f"{project.name}_records_{today.year}_{today.month:02d}")
+      records = Record.load_from_json(record_db_table.get_path())
+      print(Record.get_list_string(records))
+      print()
+
     except FileNotFoundError:
       continue
-    
-  #task_db_table = DbTablePath(db_path, lambda: "tasks_1")
-
-  # record_table = DbTablePath(db_path, lambda: "records_2025_04")
-  
-  
-  # tasks = Task.load_from_json(task_db_table.get_path())
-  # Task.display_as_list(tasks)
-
-  # records = Record.load_from_json(record_table.get_path())
-  # Record.display_as_list(records)
 
 if __name__ == '__main__':
   main()
