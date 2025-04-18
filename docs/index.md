@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 ## Core
 
 - [Info](core/info.md)
