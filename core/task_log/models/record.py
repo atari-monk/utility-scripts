@@ -12,7 +12,7 @@ class Record(BaseModel):
     estimate_minutes: int
     start_time: str
     end_time: str
-    actual_minutes: int = 0
+    actual_minutes: int
     note: str
 
     def __post_init__(self):

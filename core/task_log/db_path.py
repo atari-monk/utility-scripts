@@ -1,11 +1,11 @@
 from pathlib import Path
 
 class DbPath:
-    def __init__(self, repoPath, dbFolder):
-        self.repoPath = Path(repoPath)
-        self.dbFolder = dbFolder
+    def __init__(self, repo_path: Path, db_folder: str):
+        self.repo_path = repo_path
+        self.db_folder = db_folder
         self.path.mkdir(parents=True, exist_ok=True)
 
     @property
-    def path(self):
-        return self.repoPath / self.dbFolder
+    def path(self) -> Path:
+        return self.repo_path / self.db_folder
