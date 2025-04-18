@@ -71,5 +71,5 @@ def test_load_last_record(tmp_path):
     file_path = tmp_path / "test.json"
     file_path.write_text(json_data)
     
-    last_record = Record.load_last_record(file_path)
+    last_record = Record.loadLastRecord(file_path)
     assert last_record.TaskId == "2"

@@ -1,10 +1,11 @@
+from typing import List
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from core.task_log.models.base_model import BaseModel
 from .validators import validate_string, validate_json_file, validate_date_string, generate_list_string
 
 @dataclass
-class Record:
+class Record(BaseModel):
     Date: str
     TaskId: str
     Description: str
@@ -20,12 +21,7 @@ class Record:
         validate_string(self.Note, "Note", max_length=300)
 
     @classmethod
-    def loadFromJson(cls, filePath: Path) -> List['Record']:
-        data = validate_json_file(filePath)
-        return [cls(**item) for item in data]
-
-    @classmethod
-    def load_last_record(cls, file_path: Path) -> 'Record':
+    def loadLastRecord(cls, file_path: Path) -> 'Record':
         records = cls.loadFromJson(file_path)
         if not records:
             raise ValueError("No records found in file")

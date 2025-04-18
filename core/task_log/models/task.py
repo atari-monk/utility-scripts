@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 from pathlib import Path
+from core.task_log.models.base_model import BaseModel
 from .validators import validate_positive_integer, validate_string, validate_json_file, generate_list_string
 
 @dataclass
-class Task:
+class Task(BaseModel):
     Id: int
     ProjectId: int
     Name: str
@@ -15,11 +16,6 @@ class Task:
         validate_positive_integer(self.ProjectId, "ProjectId")
         validate_string(self.Name, "Name", max_length=50)
         validate_string(self.Description, "Description", max_length=300)
-        
-    @classmethod
-    def loadFromJson(cls, filePath: Path) -> List['Task']:
-        data = validate_json_file(filePath)
-        return [cls(**item) for item in data]
 
     @staticmethod
     def getListString(items: List['Task']) -> str:
