@@ -6,23 +6,24 @@ Cli to track task time.
 
 - Development Process:
   1. Write unit tests first
-  2. Write function
+  2. Write feature code to pass tests
 - Code Style:
   - python
-  - No comments (self-documenting code only)
+  - No comments, self-documenting code only
 
 ## Paths - Feature Specification
 
 **Implementation Requirements:**
 
 - ## Functionality:
-  - Class constructing paths to save db records
-  - base_path - data repo folder
-  - db_name - db folder
-  - Check/generate folders
-  - Property DbPath = base_path + db_name
-  - mechanism to produce rules for file names
-  - key and some logic to generate name
+  - Class DbPath constructing path to db
+  - data_repo_path
+  - db_folder
+  - Check/generate folders logic
+  - Property DbPath = data_repo_path + db_name
+  - Class DbTable constructing path to db table
+  - DbPath as param
+  - function to generate name, with file extension as param, default json
 
 ## Project Model - Feature Specification
 
@@ -30,13 +31,9 @@ Cli to track task time.
 
 - Functionality:
   - Python dataclass named `Project` with:
-    - `Id`: string
-    - `Name`: lowercase string, repo-name format
-    - `Description`: string (max 300 chars)
+    - methods to validate
     - method loading List[Project] from json file
-    - Validate input
-    - Display as object list
-    - **JSON:**
+    - method to produce string as object list
     ```json
     [
       {
@@ -53,14 +50,9 @@ Cli to track task time.
 
 - Functionality:
   - Python dataclass named `Task` with:
-    - `Id`: string
-    - `ProjectId`: string
-    - `Name`: lowercase string, repo-name format
-    - `Description`: string (max 300 chars)
+    - methods to validate
     - method loading List[Task] from json file
-    - Validate input
-    - Display as object list
-    - **JSON:**
+    - method to produce string as object list
     ```json
     [
       {
@@ -78,11 +70,10 @@ Cli to track task time.
 
 - Functionality:
   - Python dataclass named `Record` with:
-    - methods validating input
-    - method displaying as object list
+    - methods to validate
     - method loading List[Record] from json file
     - method loading last record from json file
-    - **JSON:**
+    - method to produce string as object list
     ```json
     [
       {
