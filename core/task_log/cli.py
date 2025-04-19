@@ -13,15 +13,32 @@ def main():
     )
     project_db_table = DbTablePath(db_path, name_func=lambda: "projects")
 
-    newProject = Project.from_cli_input(project_db_table.get_path())
-    Project.save_to_json([newProject], project_db_table.get_path())
+    add_new_project(project_db_table)
 
+    add_new_task(db_path, project_db_table)
+
+    read_all(db_path, project_db_table)
+
+
+def add_new_project(project_db_table):
+    new_project = Project.from_cli_input(project_db_table.get_path())
+    Project.save_to_json([new_project], project_db_table.get_path())
+
+
+def add_new_task(db_path, project_db_table):
+    project = Project.select_project(project_db_table.get_path())
+    task_db_table = DbTablePath(db_path, lambda: f"{project.name}_tasks")
+
+    new_task = Task.from_cli_input(
+        task_db_table.get_path(), project_db_table.get_path()
+    )
+    Task.save_to_json([new_task], task_db_table.get_path())
+
+
+def read_all(db_path, project_db_table):
     projects = Project.load_from_json(project_db_table.get_path())
 
     print("\nProject:\n\n" + Project.get_list_string(projects) + "\n")
-
-    projectId = Project.select_project_id(project_db_table.get_path())
-    print(projectId)
 
     for project in projects:
         task_db_table = DbTablePath(db_path, lambda: f"{project.name}_tasks")

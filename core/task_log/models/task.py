@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import List
 from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
+from core.task_log.models.project import Project
 
 
 @dataclass
@@ -27,9 +28,12 @@ class Task(BaseModel):
         return Task.generate_list_string(items, columns)
 
     @classmethod
-    def from_cli_input(cls, filePath: Path) -> "Task":
+    def from_cli_input(cls, filePath: Path, projectFilePath: Path) -> "Task":
         def get_id():
             return {"id": cls._get_id_input(filePath)}
+
+        def get_project_id():
+            return {"project_id": Project.from_cli_input(projectFilePath)}
 
         def get_name():
             return {
@@ -53,5 +57,5 @@ class Task(BaseModel):
             }
 
         return super().from_cli_input(
-            filePath, input_methods=[get_id, get_name, get_description]
+            filePath, input_methods=[get_id, get_project_id, get_name, get_description]
         )
