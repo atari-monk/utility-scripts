@@ -23,20 +23,20 @@ class Project(BaseModel):
         return Project.generate_list_string(items, columns)
 
     @classmethod
-    def from_cli_input(cls, filePath: Path) -> "Project":
+    def from_cli_input(cls, file_path: Path) -> "Project":
         def get_id():
-            return {"id": cls._get_id_input(filePath)}
+            return {"id": cls._get_id_input(file_path)}
 
         def get_name():
-            return {
-                "name": cls._get_string_input(
-                    "Name (max 50 chars, lowercase, no spaces): ",
-                    "name",
-                    max_length=50,
-                    must_be_lowercase=True,
-                    no_spaces=True,
-                )
-            }
+            name = cls._get_string_input(
+                "Name (max 50 chars, lowercase, no spaces): ",
+                "name",
+                max_length=50,
+                must_be_lowercase=True,
+                no_spaces=True,
+            )
+            cls._validate_unique_field(file_path, "name", name)
+            return {"name": name}
 
         def get_description():
             return {
@@ -49,7 +49,7 @@ class Project(BaseModel):
             }
 
         return super().from_cli_input(
-            filePath, input_methods=[get_id, get_name, get_description]
+            file_path, input_methods=[get_id, get_name, get_description]
         )
 
     @classmethod

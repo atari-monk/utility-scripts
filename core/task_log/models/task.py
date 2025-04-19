@@ -28,12 +28,12 @@ class Task(BaseModel):
         return Task.generate_list_string(items, columns)
 
     @classmethod
-    def from_cli_input(cls, filePath: Path, projectFilePath: Path) -> "Task":
+    def from_cli_input(cls, filePath: Path, project_id: int) -> "Task":
         def get_id():
             return {"id": cls._get_id_input(filePath)}
 
         def get_project_id():
-            return {"project_id": Project.from_cli_input(projectFilePath)}
+            return {"project_id": project_id}
 
         def get_name():
             return {

@@ -45,6 +45,34 @@ class BaseModel:
         if no_spaces and " " in value:
             raise ValueError(f"{field_name} must not contain spaces")
 
+    @classmethod
+    def _validate_unique_field(
+        cls: Type[T],
+        file_path: Path,  # Now takes file_path as parameter
+        field_name: str,
+        value: Any,
+        case_sensitive: bool = True,
+        error_message: str = None,
+    ) -> None:
+        if not file_path.exists():
+            return
+
+        items = cls.load_from_json(file_path)
+        for item in items:
+            existing_value = getattr(item, field_name)
+            if (
+                not case_sensitive
+                and isinstance(value, str)
+                and isinstance(existing_value, str)
+            ):
+                if value.lower() == existing_value.lower():
+                    raise ValueError(
+                        error_message
+                        or f"{field_name} must be unique (case insensitive)"
+                    )
+            elif value == existing_value:
+                raise ValueError(error_message or f"{field_name} must be unique")
+
     @staticmethod
     def _validate_date_string(
         value: str, field_name: str, date_format: str = "%Y-%m-%d"
@@ -209,8 +237,6 @@ class BaseModel:
     def from_cli_input(
         cls: Type[T], filePath: Path, input_methods: List[Callable]
     ) -> T:
-        print(f"Create a new {cls.__name__}")
-        print("-" * 20)
         inputs = {}
         for method in input_methods:
             result = method()
