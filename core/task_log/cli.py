@@ -13,7 +13,7 @@ def main():
     )
     project_db_table = DbTablePath(db_path, name_func=lambda: "projects")
 
-    newProject = Project.from_cli_input()
+    newProject = Project.from_cli_input(project_db_table.get_path())
     Project.save_to_json([newProject], project_db_table.get_path())
 
     projects = Project.load_from_json(project_db_table.get_path())

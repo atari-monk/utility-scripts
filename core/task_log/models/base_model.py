@@ -9,19 +9,6 @@ T = TypeVar("T", bound="BaseModel")
 
 @dataclass
 class BaseModel:
-    @classmethod
-    def load_from_json(cls: Type[T], filePath: Path) -> List[T]:
-        if not filePath.exists():
-            raise FileNotFoundError(f"File not found: {filePath}")
-
-        with open(filePath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        if not isinstance(data, list):
-            raise ValueError("JSON data should be a list of items")
-
-        return [cls(**item) for item in data]
-
     def __post_init__(self):
         for field in fields(self):
             value = getattr(self, field.name)
@@ -33,34 +20,6 @@ class BaseModel:
         elif field_type == str:
             self._validate_string(value, field_name)
         # Add more type validations as needed
-
-    @classmethod
-    def save_to_json(
-        cls: Type[T], items: List[T], filePath: Path, indent: int = 2
-    ) -> None:
-        if not isinstance(items, list):
-            raise ValueError("Items to save must be a list")
-
-        new_data = [item.__dict__ for item in items if isinstance(item, cls)]
-        if len(new_data) != len(items):
-            raise ValueError(f"All items must be instances of {cls.__name__}")
-
-        filePath.parent.mkdir(parents=True, exist_ok=True)
-
-        try:
-            existing_items = []
-            if filePath.exists():
-                existing_items = cls.load_from_json(filePath)
-                existing_data = [item.__dict__ for item in existing_items]
-            else:
-                existing_data = []
-
-            combined_data = existing_data + new_data
-
-            with open(filePath, "w", encoding="utf-8") as f:
-                json.dump(combined_data, f, indent=indent, ensure_ascii=False)
-        except (IOError, TypeError, json.JSONDecodeError) as e:
-            raise IOError(f"Failed to save JSON to {filePath}: {str(e)}")
 
     @staticmethod
     def _validate_positive_integer(value: Any, field_name: str) -> None:
@@ -117,6 +76,64 @@ class BaseModel:
         end = datetime.strptime(end_time, time_format)
         if end <= start:
             raise ValueError(f"{end_field_name} must be after {start_field_name}")
+
+    @classmethod
+    def load_from_json(cls: Type[T], filePath: Path) -> List[T]:
+        if not filePath.exists():
+            raise FileNotFoundError(f"File not found: {filePath}")
+
+        with open(filePath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if not isinstance(data, list):
+            raise ValueError("JSON data should be a list of items")
+
+        return [cls(**item) for item in data]
+
+    @classmethod
+    def validate_ids(cls: Type[T], filePath: Path) -> bool:
+        items = cls.load_from_json(filePath)
+        ids = [item.id for item in items if hasattr(item, "id")]
+        return len(ids) == len(set(ids)) and all(isinstance(id, int) for id in ids)
+
+    @classmethod
+    def get_next_id(cls: Type[T], filePath: Path) -> int:
+        if not filePath.exists():
+            return 1
+        items = cls.load_from_json(filePath)
+        if not items:
+            return 1
+        if not hasattr(items[0], "id"):
+            raise AttributeError("Items must have an 'id' attribute")
+        return max(item.id for item in items) + 1
+
+    @classmethod
+    def save_to_json(
+        cls: Type[T], items: List[T], filePath: Path, indent: int = 2
+    ) -> None:
+        if not isinstance(items, list):
+            raise ValueError("Items to save must be a list")
+
+        new_data = [item.__dict__ for item in items if isinstance(item, cls)]
+        if len(new_data) != len(items):
+            raise ValueError(f"All items must be instances of {cls.__name__}")
+
+        filePath.parent.mkdir(parents=True, exist_ok=True)
+
+        try:
+            existing_items = []
+            if filePath.exists():
+                existing_items = cls.load_from_json(filePath)
+                existing_data = [item.__dict__ for item in existing_items]
+            else:
+                existing_data = []
+
+            combined_data = existing_data + new_data
+
+            with open(filePath, "w", encoding="utf-8") as f:
+                json.dump(combined_data, f, indent=indent, ensure_ascii=False)
+        except (IOError, TypeError, json.JSONDecodeError) as e:
+            raise IOError(f"Failed to save JSON to {filePath}: {str(e)}")
 
     @classmethod
     def generate_list_string(cls, items: List[T], columns: list) -> str:

@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List
 from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
@@ -22,17 +23,17 @@ class Project(BaseModel):
         return Project.generate_list_string(items, columns)
 
     @classmethod
-    def from_cli_input(cls) -> "Project":
+    def from_cli_input(cls, filePath: Path) -> "Project":
+        if not Project.validate_ids(filePath=filePath):
+            raise ValueError(f"{filePath} has errors in Ids !")
+
         print("Create a new Project")
         print("--------------------")
 
+        id = Project.get_next_id(filePath=filePath)
+
         while True:
             try:
-                id_input = input("ID (number): ").strip()
-                if not id_input:
-                    raise ValueError("ID cannot be empty")
-                id = int(id_input)
-
                 name = input("Name (max 50 chars, lowercase, no spaces): ").strip()
                 if not name:
                     raise ValueError("Name cannot be empty")
