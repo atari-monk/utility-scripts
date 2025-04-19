@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List
 from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
-from core.task_log.models.project import Project
 
 
 @dataclass
@@ -13,7 +12,6 @@ class Task(BaseModel):
     description: str
 
     def __post_init__(self):
-        super().__post_init__()
         self._validate_string(self.name, "name", max_length=50)
         self._validate_string(self.description, "description", max_length=300)
 
@@ -59,3 +57,26 @@ class Task(BaseModel):
         return super().from_cli_input(
             filePath, input_methods=[get_id, get_project_id, get_name, get_description]
         )
+
+    @classmethod
+    def select_task(cls, filePath: Path) -> "Task":
+        if not filePath.exists():
+            raise FileNotFoundError(f"No tasks file found at {filePath}")
+
+        tasks = cls.load_from_json(filePath)
+        if not tasks:
+            raise ValueError("No tasks available to select")
+
+        print("\nAvailable Tasks:")
+        print(cls.get_list_string(tasks))
+
+        while True:
+            try:
+                selected_id = int(input("\nEnter task ID to select: "))
+                for task in tasks:
+                    if task.id == selected_id:
+                        return task
+                raise ValueError("Invalid task ID")
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+                print("Please try again.")

@@ -11,7 +11,6 @@ class Project(BaseModel):
     description: str
 
     def __post_init__(self):
-        super().__post_init__()
         self._validate_string(
             self.name, "name", max_length=50, must_be_lowercase=True, no_spaces=True
         )

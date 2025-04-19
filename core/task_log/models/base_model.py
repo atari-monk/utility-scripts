@@ -9,17 +9,6 @@ T = TypeVar("T", bound="BaseModel")
 
 @dataclass
 class BaseModel:
-    def __post_init__(self):
-        for field in fields(self):
-            value = getattr(self, field.name)
-            self._validate_field(field.name, value, field.type)
-
-    def _validate_field(self, field_name: str, value: Any, field_type: type) -> None:
-        if field_type == int:
-            self._validate_positive_integer(value, field_name)
-        elif field_type == str:
-            self._validate_string(value, field_name)
-
     @staticmethod
     def _validate_positive_integer(value: Any, field_name: str) -> None:
         if not isinstance(value, int) or value <= 0:
@@ -48,7 +37,7 @@ class BaseModel:
     @classmethod
     def _validate_unique_field(
         cls: Type[T],
-        file_path: Path,  # Now takes file_path as parameter
+        file_path: Path,
         field_name: str,
         value: Any,
         case_sensitive: bool = True,
@@ -148,19 +137,47 @@ class BaseModel:
         filePath.parent.mkdir(parents=True, exist_ok=True)
 
         try:
-            existing_items = []
-            if filePath.exists():
-                existing_items = cls.load_from_json(filePath)
-                existing_data = [item.__dict__ for item in existing_items]
-            else:
-                existing_data = []
-
-            combined_data = existing_data + new_data
-
             with open(filePath, "w", encoding="utf-8") as f:
-                json.dump(combined_data, f, indent=indent, ensure_ascii=False)
-        except (IOError, TypeError, json.JSONDecodeError) as e:
+                json.dump(new_data, f, indent=indent, ensure_ascii=False)
+        except (IOError, TypeError) as e:
             raise IOError(f"Failed to save JSON to {filePath}: {str(e)}")
+
+    @classmethod
+    def append_to_json(
+        cls: Type[T], new_items: List[T], filePath: Path, indent: int = 2
+    ) -> None:
+        if not isinstance(new_items, list):
+            raise ValueError("Items to append must be a list")
+
+        existing_items = []
+        if filePath.exists():
+            try:
+                existing_items = cls.load_from_json(filePath)
+            except (json.JSONDecodeError, IOError) as e:
+                raise IOError(f"Failed to load existing JSON from {filePath}: {str(e)}")
+
+        combined_items = existing_items + new_items
+        cls.save_to_json(combined_items, filePath, indent)
+
+    @classmethod
+    def update_in_json(cls: Type[T], item: T, filePath: Path) -> None:
+        if not filePath.exists():
+            raise FileNotFoundError(f"File not found: {filePath}")
+
+        items = cls.load_from_json(filePath)
+        updated = False
+
+        for i, existing_item in enumerate(items):
+            if hasattr(existing_item, "id") and hasattr(item, "id"):
+                if existing_item.id == item.id:
+                    items[i] = item
+                    updated = True
+                    break
+
+        if not updated:
+            raise ValueError("Item not found in JSON file")
+
+        cls.save_to_json(items, filePath)
 
     @classmethod
     def generate_list_string(cls, items: List[T], columns: list) -> str:
@@ -215,10 +232,20 @@ class BaseModel:
         must_be_lowercase: bool = False,
         no_spaces: bool = False,
         allow_empty: bool = False,
+        default_value: str = None,
     ) -> str:
         while True:
             try:
                 value = input(prompt).strip()
+                if not value and default_value is not None:
+                    cls._validate_string(
+                        default_value,
+                        field_name,
+                        max_length=max_length,
+                        must_be_lowercase=must_be_lowercase,
+                        no_spaces=no_spaces,
+                    )
+                    return default_value
                 if not value and not allow_empty:
                     raise ValueError(f"{field_name} cannot be empty")
                 cls._validate_string(
