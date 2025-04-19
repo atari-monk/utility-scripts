@@ -3,3 +3,4 @@ venv
 utility_scripts.egg-info
 .pytest_cache
 .coverage
+.ruff_cache
