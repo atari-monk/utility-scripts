@@ -20,6 +20,9 @@ def main():
 
     print("\nProject:\n\n" + Project.get_list_string(projects) + "\n")
 
+    projectId = Project.select_project_id(project_db_table.get_path())
+    print(projectId)
+
     for project in projects:
         task_db_table = DbTablePath(db_path, lambda: f"{project.name}_tasks")
         try:

@@ -51,3 +51,25 @@ class Project(BaseModel):
         return super().from_cli_input(
             filePath, input_methods=[get_id, get_name, get_description]
         )
+
+    @classmethod
+    def select_project_id(cls, filePath: Path) -> int:
+        if not filePath.exists():
+            raise FileNotFoundError(f"No projects file found at {filePath}")
+        
+        projects = cls.load_from_json(filePath)
+        if not projects:
+            raise ValueError("No projects available to select")
+        
+        print("\nAvailable Projects:")
+        print(cls.get_list_string(projects))
+        
+        while True:
+            try:
+                selected_id = int(input("\nEnter project ID to select: "))
+                if selected_id not in [p.id for p in projects]:
+                    raise ValueError("Invalid project ID")
+                return selected_id
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+                print("Please try again.")

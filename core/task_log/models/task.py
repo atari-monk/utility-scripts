@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List
 from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
@@ -24,3 +25,33 @@ class Task(BaseModel):
             ("Description", "description"),
         ]
         return Task.generate_list_string(items, columns)
+
+    @classmethod
+    def from_cli_input(cls, filePath: Path) -> "Task":
+        def get_id():
+            return {"id": cls._get_id_input(filePath)}
+
+        def get_name():
+            return {
+                "name": cls._get_string_input(
+                    "Name (max 50 chars, lowercase, no spaces): ",
+                    "name",
+                    max_length=50,
+                    must_be_lowercase=True,
+                    no_spaces=True,
+                )
+            }
+
+        def get_description():
+            return {
+                "description": cls._get_string_input(
+                    "Description (max 300 chars): ",
+                    "description",
+                    max_length=300,
+                    allow_empty=False,
+                )
+            }
+
+        return super().from_cli_input(
+            filePath, input_methods=[get_id, get_name, get_description]
+        )
