@@ -4,6 +4,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from core.task_log.models.base_model import BaseModel
 
+
 @dataclass
 class Record(BaseModel):
     date: str
@@ -27,19 +28,19 @@ class Record(BaseModel):
             self._calculate_actual_minutes()
 
     def _calculate_actual_minutes(self):
-        start_h, start_m = map(int, self.start_time.split(':'))
-        end_h, end_m = map(int, self.end_time.split(':'))
+        start_h, start_m = map(int, self.start_time.split(":"))
+        end_h, end_m = map(int, self.end_time.split(":"))
         self.actual_minutes = (end_h * 60 + end_m) - (start_h * 60 + start_m)
-        
+
     @classmethod
-    def load_last_record(cls, file_path: Path) -> 'Record':
+    def load_last_record(cls, file_path: Path) -> "Record":
         records = cls.load_from_json(file_path)
         if not records:
             raise ValueError("No records found in file")
         return records[-1]
-    
+
     @staticmethod
-    def get_list_string(items: List['Record']) -> str:
+    def get_list_string(items: List["Record"]) -> str:
         columns = [
             ("Date", "date"),
             ("Task Id", "task_id", int),
@@ -48,6 +49,6 @@ class Record(BaseModel):
             ("StartTime", "start_time", str),
             ("EndTime", "end_time", str),
             ("ActualMinutes", "actual_minutes", str),
-            ("Note", "note", str)
+            ("Note", "note", str),
         ]
         return Record.generate_list_string(items, columns)

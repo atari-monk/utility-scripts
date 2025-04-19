@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 class DbPath:
     def __init__(self, repo_path: Path, db_folder: str):
         self.repo_path = repo_path

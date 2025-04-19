@@ -5,6 +5,7 @@ from typing import List
 import pyperclip
 import jsonschema
 
+
 @dataclass
 class SchemeInfo:
     Name: str
@@ -38,9 +39,9 @@ class SchemeInfo:
 
     @classmethod
     def from_json_file(cls, file_path: str) -> List["SchemeInfo"]:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             data = json.load(f)
-        
+
         schema = {
             "type": "array",
             "items": {
@@ -48,29 +49,29 @@ class SchemeInfo:
                 "properties": {
                     "Name": {"type": "string", "maxLength": 50},
                     "Description": {"type": "string", "maxLength": 300},
-                    "Path": {"type": "string"}
+                    "Path": {"type": "string"},
                 },
-                "required": ["Name", "Description", "Path"]
-            }
+                "required": ["Name", "Description", "Path"],
+            },
         }
-        
+
         jsonschema.validate(instance=data, schema=schema)
-        
+
         return [cls(**item) for item in data]
 
     @staticmethod
     def load_and_copy_scheme(schemes: List["SchemeInfo"], name: str) -> None:
         matching_schemes = [s for s in schemes if s.Name == name]
-        
+
         if not matching_schemes:
             raise ValueError(f"No scheme found with name: {name}")
         if len(matching_schemes) > 1:
             raise ValueError(f"Multiple schemes found with name: {name}")
-            
+
         scheme = matching_schemes[0]
-        
+
         try:
-            with open(scheme.Path, 'r') as f:
+            with open(scheme.Path, "r") as f:
                 content = f.read()
             pyperclip.copy(content)
         except Exception as e:

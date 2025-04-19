@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 from core.task_log.db_path import DbPath
 
+
 class TestDbInfo(unittest.TestCase):
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Callable
 from core.task_log.db_path import DbPath
 
+
 class DbTablePath:
     def __init__(self, db_path: DbPath, name_func: Callable[[], str]):
         self.db_path = db_path
