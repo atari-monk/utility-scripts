@@ -21,7 +21,6 @@ class Project(BaseModel):
         columns = [("Id", "id", int), ("Name", "name"), ("Description", "description")]
         return Project.generate_list_string(items, columns)
 
-
     @classmethod
     def from_cli_input(cls) -> "Project":
         print("Create a new Project")

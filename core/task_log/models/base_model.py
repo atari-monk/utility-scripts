@@ -41,18 +41,25 @@ class BaseModel:
         if not isinstance(items, list):
             raise ValueError("Items to save must be a list")
 
-        data = []
-        for item in items:
-            if not isinstance(item, cls):
-                raise ValueError(f"All items must be instances of {cls.__name__}")
-            data.append(item.__dict__)
+        new_data = [item.__dict__ for item in items if isinstance(item, cls)]
+        if len(new_data) != len(items):
+            raise ValueError(f"All items must be instances of {cls.__name__}")
 
         filePath.parent.mkdir(parents=True, exist_ok=True)
 
         try:
+            existing_items = []
+            if filePath.exists():
+                existing_items = cls.load_from_json(filePath)
+                existing_data = [item.__dict__ for item in existing_items]
+            else:
+                existing_data = []
+
+            combined_data = existing_data + new_data
+
             with open(filePath, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=indent, ensure_ascii=False)
-        except (IOError, TypeError) as e:
+                json.dump(combined_data, f, indent=indent, ensure_ascii=False)
+        except (IOError, TypeError, json.JSONDecodeError) as e:
             raise IOError(f"Failed to save JSON to {filePath}: {str(e)}")
 
     @staticmethod
