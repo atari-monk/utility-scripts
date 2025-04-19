@@ -1,4 +1,4 @@
-from typing import TypeVar, Type, List, Any
+from typing import TypeVar, Type, List, Any, Callable
 from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, fields
@@ -19,7 +19,6 @@ class BaseModel:
             self._validate_positive_integer(value, field_name)
         elif field_type == str:
             self._validate_string(value, field_name)
-        # Add more type validations as needed
 
     @staticmethod
     def _validate_positive_integer(value: Any, field_name: str) -> None:
@@ -137,10 +136,6 @@ class BaseModel:
 
     @classmethod
     def generate_list_string(cls, items: List[T], columns: list) -> str:
-        """
-        Generate a formatted string for listing items.
-        columns should be a list of tuples: (header_name, field_name, [optional_format_func])
-        """
         if not items:
             return f"No {cls.__name__.lower()}s to list"
 
@@ -176,3 +171,48 @@ class BaseModel:
             lines.append("  ".join(line_parts))
 
         return "\n".join(lines)
+
+    @classmethod
+    def _get_id_input(cls, filePath: Path) -> int:
+        if not cls.validate_ids(filePath=filePath):
+            raise ValueError(f"{filePath} has errors in Ids")
+        return cls.get_next_id(filePath=filePath)
+
+    @classmethod
+    def _get_string_input(
+        cls,
+        prompt: str,
+        field_name: str,
+        max_length: int = None,
+        must_be_lowercase: bool = False,
+        no_spaces: bool = False,
+        allow_empty: bool = False,
+    ) -> str:
+        while True:
+            try:
+                value = input(prompt).strip()
+                if not value and not allow_empty:
+                    raise ValueError(f"{field_name} cannot be empty")
+                cls._validate_string(
+                    value,
+                    field_name,
+                    max_length=max_length,
+                    must_be_lowercase=must_be_lowercase,
+                    no_spaces=no_spaces,
+                )
+                return value
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+                print("Please try again.\n")
+
+    @classmethod
+    def from_cli_input(
+        cls: Type[T], filePath: Path, input_methods: List[Callable]
+    ) -> T:
+        print(f"Create a new {cls.__name__}")
+        print("-" * 20)
+        inputs = {}
+        for method in input_methods:
+            result = method()
+            inputs.update(result)
+        return cls(**inputs)

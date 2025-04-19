@@ -24,31 +24,30 @@ class Project(BaseModel):
 
     @classmethod
     def from_cli_input(cls, filePath: Path) -> "Project":
-        if not Project.validate_ids(filePath=filePath):
-            raise ValueError(f"{filePath} has errors in Ids !")
+        def get_id():
+            return {"id": cls._get_id_input(filePath)}
 
-        print("Create a new Project")
-        print("--------------------")
+        def get_name():
+            return {
+                "name": cls._get_string_input(
+                    "Name (max 50 chars, lowercase, no spaces): ",
+                    "name",
+                    max_length=50,
+                    must_be_lowercase=True,
+                    no_spaces=True,
+                )
+            }
 
-        id = Project.get_next_id(filePath=filePath)
+        def get_description():
+            return {
+                "description": cls._get_string_input(
+                    "Description (max 300 chars): ",
+                    "description",
+                    max_length=300,
+                    allow_empty=False,
+                )
+            }
 
-        while True:
-            try:
-                name = input("Name (max 50 chars, lowercase, no spaces): ").strip()
-                if not name:
-                    raise ValueError("Name cannot be empty")
-
-                description = input("Description (max 300 chars): ").strip()
-                if not description:
-                    description = ""
-
-                return cls(id=id, name=name, description=description)
-
-            except ValueError as e:
-                print(f"Invalid input: {e}")
-                print("Please try again.\n")
-                continue
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                print("Please try again.\n")
-                continue
+        return super().from_cli_input(
+            filePath, input_methods=[get_id, get_name, get_description]
+        )
